@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'post',
     'corsheaders',
     'rest_framework',
+    'accounts',
+    'knox',
 ]
 
 MIDDLEWARE = [
