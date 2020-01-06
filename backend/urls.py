@@ -1,12 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-from apps.post import views
-
-router = routers.DefaultRouter()
-router.register(r'posts', views.PostView, 'post')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/post', include('apps.post.urls')),
+    path('api/user', include('apps.user.urls')),
+    path('api/channel', include('apps.channel.urls')),
+    path('notification', include('apps.notification.urls'))
 ]
