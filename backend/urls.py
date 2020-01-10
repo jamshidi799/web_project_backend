@@ -8,5 +8,6 @@ router.register(r'posts', views.PostView, 'post')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/posts/', include(router.urls)),
+    path('', include('accounts.urls')),
 ]
