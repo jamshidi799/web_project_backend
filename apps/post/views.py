@@ -1,15 +1,15 @@
 from apps.post.models import Post
 from apps.post.serializers import PostSerializer
 from django.http import Http404
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class PostList(APIView):
-    """
-    List all Posts, or create a new Post.
-    """
+class PostList(GenericAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
     def get(self, request, format=None):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
@@ -23,7 +23,7 @@ class PostList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PostDetail(APIView):
+class PostDetail(GenericAPIView):
     """
     Retrieve, update or delete a Post instance.
     """

@@ -1,9 +1,15 @@
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from apps.channel.views import ChannelView
+
+router = DefaultRouter()
+router.register(r'', ChannelView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/post/', include('apps.post.urls')),
+    path('api/channel/', include(router.urls)),
     # path('api/user/', include('apps.user.urls')),
     # path('api/channel/', include('apps.channel.urls')),
     # path('notification/', include('apps.notification.urls'))
