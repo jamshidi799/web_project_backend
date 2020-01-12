@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.notification',
     'apps.channel',
-
 ]
 
 MIDDLEWARE = [
@@ -124,6 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # we whitelist localhost:3000 because that's where frontend will be served
 # CORS_ORIGIN_WHITELIST = ('localhost:3000/')

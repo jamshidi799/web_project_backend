@@ -19,6 +19,9 @@ class Post(models.Model):
     class Meta:
         ordering = ['date']
 
+    def __str__(self):
+        return f'{self.title}'
+
 
 class Comment(models.Model):
     content = models.CharField(max_length=2083, default='', blank=True)
@@ -32,6 +35,9 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['date']
+
+    def __str__(self):
+        return f'{self.content}'
 
 
 class Like(models.Model):
