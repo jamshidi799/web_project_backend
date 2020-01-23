@@ -18,14 +18,18 @@ class Follower(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User,
-                                on_delete=models.CASCADE,
-                                related_name='profile')
+    user = models.OneToOneField(
+        User,
+        unique=True,
+        on_delete=models.CASCADE,
+    )
     bio = models.CharField(max_length=300)
-    image = models.ImageField()
+    image = models.ImageField(blank=True, null=True)
     follow = models.OneToOneField(Follower,
                                   related_name='Follower',
-                                  on_delete=models.CASCADE)
+                                  on_delete=models.CASCADE,
+                                  blank=True,
+                                  null=True)
 
     def __str__(self):
         return f'username: {self.user.username},' \
