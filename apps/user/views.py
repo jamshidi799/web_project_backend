@@ -7,22 +7,27 @@ from apps.user.serializers import ProfileSerializer, UserSerializer, ProfileSmal
 from .models import Profile
 
 
-class ProfileView(GenericAPIView):
+class ProfileDetail(GenericAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSerializer
 
     # permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        return self.queryset
+
     def get(self, request, username):
+        print(username)
         user = self.get_queryset().get(user__username=username)
+        # user = User.objects.filter(username=username)
         data = self.get_serializer(user).data
-        return Response(data=data, status=HTTP_200_OK)
+        return Response(data=data)
 
 
-class ProfileSmallList(GenericAPIView):
-    serializer_class = ProfileSmallSerializer
+class ProfileList(GenericAPIView):
+    serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 
     def get(self, request):
-        serializer = ProfileSmallSerializer(self.get_queryset(), many=True)
+        serializer = ProfileSerializer(self.get_queryset(), many=True)
         return Response(data=serializer.data)

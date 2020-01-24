@@ -5,17 +5,20 @@ from rest_framework.validators import UniqueValidator
 from .models import Profile
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'password', 'email']
-
-
 class UserSmallSerializer(serializers.ModelSerializer):
     # username = serializers.CharField(max_length)
+
     class Meta:
         model = User
         fields = ['username']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    # profile = ProfileSerializer
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password', 'email']
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -23,12 +26,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['user', 'bio']
 
 
 class ProfileSmallSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSmallSerializer()
 
     class Meta:
         model = Profile
-        fields = ['user']
+        fields = ['bio']
