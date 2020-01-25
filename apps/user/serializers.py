@@ -20,6 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'password', 'email']
 
+    def validate(self, data):
+        return data
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -27,6 +30,19 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['user', 'bio']
+
+    def validate(self, data):
+        return data
+
+    def update(self, instance, validated_data):
+        user = instance.user
+        user_validated_data = validated_data.pop('user')
+        user.username = user_validated_data.get('username', user.username)
+        user.email = user_validated_data.get('email', user.email)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.save()
+        user.save()
+        return instance
 
 
 class ProfileSmallSerializer(serializers.ModelSerializer):
