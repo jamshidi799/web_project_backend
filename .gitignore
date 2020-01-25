@@ -3,3 +3,4 @@
 # Default ignored files
 /workspace.xml
 /venv
+db.sqlite3
