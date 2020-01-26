@@ -5,7 +5,7 @@ from apps.user.serializers import UserSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
+    # owner = UserSerializer()
 
     class Meta:
         model = Comment
@@ -13,7 +13,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    owner = UserSerializer()
+    # owner = UserSerializer()
 
     class Meta:
         model = Post

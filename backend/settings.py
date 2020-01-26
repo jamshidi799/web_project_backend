@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.notification',
     'apps.channel',
+    'apps.home',
 ]
 
 MIDDLEWARE = [
