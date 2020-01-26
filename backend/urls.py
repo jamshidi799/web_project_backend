@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/posts/', include('apps.post.urls')),
     path('api/channels/', include(router.urls)),
     path('api/user/', include('apps.user.urls')),
+     path('', include('rest_framework.urls')),
     # path('api/channel/', include('apps.channel.urls')),
     # path('notification/', include('apps.notification.urls'))
 ]
