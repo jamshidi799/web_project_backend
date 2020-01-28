@@ -4,11 +4,17 @@ from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class PostList(GenericAPIView):
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+    # queryset = Post.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        print(self.request.user)
+        return Post.objects.all()
 
     def get(self, request, format=None):
         posts = Post.objects.all()
