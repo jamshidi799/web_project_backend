@@ -3,7 +3,6 @@
 # Default ignored files
 /workspace.xml
 /venv
-db.sqlite3
 /pip
 /db.sqlite3
 /venvv
