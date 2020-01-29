@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 
-from .models import Profile
+from .models import Profile, Connection
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -16,40 +16,46 @@ class ProfileSerializer(serializers.ModelSerializer):
     def validate(self, data):
         return data
 
-    def update(self, instance, validated_data):
-        user = instance.user
-        user_validated_data = validated_data.pop('user')
-        user.username = user_validated_data.get('username', user.username)
-        user.email = user_validated_data.get('email', user.email)
-        instance.bio = validated_data.get('bio', instance.bio)
-        instance.save()
-        user.save()
-        return instance
-
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'profile']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'profile',
+        ]
 
     def validate(self, data):
         return data
 
+    def update(self, instance, validated_data):
+        instance.save()
+        profile = instance.profile
+        Profile.bio = validated_data.get('profile.bio', profile.bio)
+        # user.email = user_validated_data.get('email', user.email)
+        # instance.bio = validated_data.get('bio', instance.bio)
+        profile.save()
+        return instance
+
 
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('id', 'username', 'email', 'password', 'profile')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(validated_data['username'],
                                         validated_data['email'],
                                         validated_data['password'])
-
+        Profile.objects.create(user=user, bio=validated_data['profile']['bio'])
         return user
 
 

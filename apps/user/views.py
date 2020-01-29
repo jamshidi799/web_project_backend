@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView, ListAPIView
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -61,7 +61,9 @@ class ProfileDetail(GenericAPIView):
 
     def get(self, request, username):
         user = get_object_or_404(self.get_queryset(), username=username)
+        # print(user.profile)
         data = self.get_serializer(user).data
+        print(data)
         return Response(data=data)
 
     def put(self, request, username):

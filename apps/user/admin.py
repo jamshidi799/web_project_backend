@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Follower
+from .models import Profile, Connection
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -7,4 +7,4 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile, ProfileAdmin)
-admin.site.register(Follower)
+admin.site.register(Connection)

@@ -32,6 +32,10 @@ class Comment(models.Model):
     post = models.ForeignKey(Post,
                              related_name='comments',
                              on_delete=models.CASCADE)
+    reply_to = models.ForeignKey('Comment',
+                                 on_delete=models.CASCADE,
+                                 null=True,
+                                 blank=True)
 
     class Meta:
         ordering = ['date']

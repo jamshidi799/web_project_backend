@@ -2,19 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Follower(models.Model):
-    follower = models.ForeignKey(User,
-                                 related_name='following',
-                                 on_delete=models.CASCADE)
+class Connection(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    creator = models.ForeignKey(User,
+                                related_name="friendship_creator_set",
+                                on_delete=models.CASCADE)
     following = models.ForeignKey(User,
-                                  related_name='followers',
+                                  related_name="friend_set",
                                   on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('follower', 'following')
-
-    def __unicode__(self):
-        return u'%s follows %s' % (self.follower, self.following)
 
 
 class Profile(models.Model):
@@ -25,11 +20,6 @@ class Profile(models.Model):
     )
     bio = models.CharField(max_length=300)
     image = models.ImageField(blank=True, null=True)
-    follow = models.OneToOneField(Follower,
-                                  related_name='Follower',
-                                  on_delete=models.CASCADE,
-                                  blank=True,
-                                  null=True)
 
     def __str__(self):
         return f'username: {self.user.username},' \
