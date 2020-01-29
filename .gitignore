@@ -7,3 +7,6 @@ db.sqlite3
 /pip
 /db.sqlite3
 /venvv
+!**/__pycache__/
+!**/migrations/
+__pycache__/

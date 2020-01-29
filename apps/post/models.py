@@ -15,6 +15,9 @@ class Post(models.Model):
                                 on_delete=models.CASCADE,
                                 blank=True,
                                 null=True)
+    like = models.ManyToManyField('auth.User',
+                                  related_name="liked_posts",
+                                  blank=True)
 
     class Meta:
         ordering = ['date']
@@ -36,21 +39,12 @@ class Comment(models.Model):
                                  on_delete=models.CASCADE,
                                  null=True,
                                  blank=True)
+    like = models.ManyToManyField('auth.User',
+                                  related_name="liek_comments",
+                                  blank=True)
 
     class Meta:
         ordering = ['date']
 
     def __str__(self):
         return f'{self.content}'
-
-
-class Like(models.Model):
-    comment = models.OneToOneField(Comment,
-                                   on_delete=models.CASCADE,
-                                   primary_key=True)
-
-
-class DisLike(models.Model):
-    comment = models.OneToOneField(Comment,
-                                   on_delete=models.CASCADE,
-                                   primary_key=True)

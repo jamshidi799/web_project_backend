@@ -30,9 +30,8 @@ class PostList(GenericAPIView):
 
 
 class PostDetail(GenericAPIView):
-    """
-    Retrieve, update or delete a Post instance.
-    """
+    serializer_class = PostSerializer
+
     def get_object(self, pk):
         try:
             return Post.objects.get(pk=pk)
@@ -56,6 +55,23 @@ class PostDetail(GenericAPIView):
         post = self.get_object(pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LikePost(GenericAPIView):
+    serializer_class = PostSerializer
+
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk):
+        post = self.get_object(pk)
+        post.like.add(request.user)
+        post.save()
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
 
 
 class CommentList(GenericAPIView):
