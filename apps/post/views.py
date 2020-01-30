@@ -3,7 +3,7 @@ from apps.post.serializers import PostSerializer, CommentSerializer
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
@@ -30,9 +30,8 @@ class PostList(GenericAPIView):
 
 
 class PostDetail(GenericAPIView):
-    """
-    Retrieve, update or delete a Post instance.
-    """
+    serializer_class = PostSerializer
+
     def get_object(self, pk):
         try:
             return Post.objects.get(pk=pk)
@@ -58,18 +57,38 @@ class PostDetail(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class LikePost(GenericAPIView):
+    serializer_class = PostSerializer
+
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk):
+        post = self.get_object(pk)
+        post.like.add(request.user)
+        post.save()
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+
+
 class CommentList(GenericAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
-
-    # def get_queryset(self):
-    #     query_set = Comment.objects.filter(post=post_id)
-    #     return query_set
 
     def get(self, request, post_id):
         queryset = self.queryset.filter(post_id=post_id)
         serializer = CommentSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentDetail(GenericAPIView):
