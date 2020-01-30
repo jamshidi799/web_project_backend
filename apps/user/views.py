@@ -61,15 +61,12 @@ class ProfileDetail(GenericAPIView):
 
     def get(self, request, username):
         user = get_object_or_404(self.get_queryset(), username=username)
-        # print(user.profile)
         data = self.get_serializer(user).data
-        print(data)
         return Response(data=data)
 
     def put(self, request, username):
-        profile = get_object_or_404(self.get_queryset(),
-                                    user__username=username)
-        serializer = self.get_serializer(profile, data=request.data)
+        user = get_object_or_404(self.get_queryset(), username=username)
+        serializer = self.get_serializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

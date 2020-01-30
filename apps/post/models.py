@@ -39,9 +39,10 @@ class Comment(models.Model):
                                  on_delete=models.CASCADE,
                                  null=True,
                                  blank=True)
-    like = models.ManyToManyField('auth.User',
-                                  related_name="liek_comments",
-                                  blank=True)
+
+    # like = models.ManyToManyField('auth.User',
+    #                               related_name="liek_comments",
+    #                               blank=True)
 
     class Meta:
         ordering = ['date']

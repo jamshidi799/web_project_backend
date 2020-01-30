@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 
+# from apps.post.serializers import PostSerializer, PostSmallSerializer
 from .models import Profile, Connection
 
 
@@ -11,23 +12,28 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        exclude = ['user']
+        exclude = ['user', 'id']
 
     def validate(self, data):
         return data
 
 
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connection
+        fields = ['following', 'creator']
+
+
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
+    creator = ConnectionSerializer(many=True)
+    following = ConnectionSerializer(many=True)
+
+    # posts = PostSmallSerializer(many=True)
 
     class Meta:
         model = User
-        fields = [
-            'id',
-            'username',
-            'email',
-            'profile',
-        ]
+        fields = ['id', 'username', 'email', 'profile', 'creator', 'following']
 
     def validate(self, data):
         return data

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework import status
 
 from apps.channel.models import Channel
-from apps.channel.serializers import ChannelSerializer
+from apps.channel.serializers import ChannelSerializer, ChannelSmallSerializer
 
 
 class ChannelList(GenericAPIView):
@@ -16,7 +17,7 @@ class ChannelList(GenericAPIView):
 
     def get(self, request, format=None):
         channels = self.get_queryset()
-        serializer = ChannelSerializer(channels, many=True)
+        serializer = ChannelSmallSerializer(channels, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):

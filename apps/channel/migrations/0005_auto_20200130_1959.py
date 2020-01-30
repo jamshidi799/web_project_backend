@@ -8,13 +8,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('post', '0004_auto_20200130_1331'),
+        ('channel', '0004_channel_authors'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='post',
-            name='like',
-            field=models.ManyToManyField(blank=True, related_name='liked_posts', to=settings.AUTH_USER_MODEL),
+        migrations.AlterField(
+            model_name='channel',
+            name='authors',
+            field=models.ManyToManyField(blank=True, related_name='authors', to=settings.AUTH_USER_MODEL),
         ),
     ]
