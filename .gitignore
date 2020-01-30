@@ -4,5 +4,6 @@
 /workspace.xml
 /venv
 /pip
+db.sqlite3
 /db.sqlite3
 /venvv
