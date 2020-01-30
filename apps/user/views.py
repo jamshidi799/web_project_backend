@@ -6,8 +6,8 @@ from rest_framework import status, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from knox.models import AuthToken
 
-from apps.user.serializers import ProfileSerializer, UserSerializer, RegisterSerializer, LoginSerializer
-from .models import Profile
+from apps.user.serializers import ProfileSerializer, UserSerializer, RegisterSerializer, LoginSerializer, ConnectionSerializer
+from .models import Profile, Connection
 
 
 # Register API
@@ -87,3 +87,26 @@ class ProfileList(GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ConnectionList(GenericAPIView):
+    serializer_class = ConnectionSerializer
+    queryset = Connection.objects.all()
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ConnectionDetail(GenericAPIView):
+    serializer_class = ConnectionSerializer
+    queryset = Connection.objects.all()
+
+    def delete(self, request, creator, following, format=None):
+        connection = self.get_queryset().get(creator=creator,
+                                             following=following)
+        connection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

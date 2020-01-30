@@ -78,14 +78,17 @@ class CommentList(GenericAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
-    # def get_queryset(self):
-    #     query_set = Comment.objects.filter(post=post_id)
-    #     return query_set
-
     def get(self, request, post_id):
         queryset = self.queryset.filter(post_id=post_id)
         serializer = CommentSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentDetail(GenericAPIView):
