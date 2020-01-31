@@ -9,8 +9,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class PostList(GenericAPIView):
     serializer_class = PostSerializer
+
     # queryset = Post.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         print(self.request.user)
@@ -83,7 +84,7 @@ class CommentList(GenericAPIView):
         serializer = CommentSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
+    def post(self, request, post_id, format=None):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -100,20 +101,50 @@ class CommentDetail(GenericAPIView):
         except Comment.DoesNotExist:
             raise Http404
 
-    def get(self, request, post_id, id, format=None):
-        comment = self.get_object(id)
+    def get(self, request, post_id, comment_id, format=None):
+        comment = self.get_object(comment_id)
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
-    def put(self, request, id, format=None):
-        comment = self.get_object(id)
+    def put(self, request, post_id, comment_id, format=None):
+        comment = self.get_object(comment_id)
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id, format=None):
-        comment = self.get_object(id)
+    def delete(self, request, post_id, comment_id, format=None):
+        comment = self.get_object(comment_id)
         comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentLikeView(GenericAPIView):
+    serializer_class = CommentSerializer
+
+    def get_object(self, id):
+        try:
+            return Comment.objects.get(id=id)
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def post(self, request, comment_id, user_id):
+        comment = self.get_object(comment_id)
+        comment.like.add(user_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentDislikeView(GenericAPIView):
+    serializer_class = CommentSerializer
+
+    def get_object(self, id):
+        try:
+            return Comment.objects.get(id=id)
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def post(self, request, comment_id, user_id):
+        comment = self.get_object(comment_id)
+        comment.dislike.add(user_id)
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -5,18 +5,25 @@ from .models import Post, Comment
 from apps.user.serializers import UserSerializer
 
 
+class CommentReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'owner', 'content', 'date', 'like', 'dislike')
+
+
 class CommentSerializer(serializers.ModelSerializer):
-    # post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
-    reply_to = serializers.PrimaryKeyRelatedField(
-        queryset=Comment.objects.all(), allow_null=True)
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+
+    # reply_to = CommentReplySerializer()
 
     class Meta:
         model = Comment
-        fields = ('id', 'owner', 'content', 'date', 'reply_to')
+        fields = ('id', 'owner', 'post', 'content', 'date', 'reply_to', 'like',
+                  'dislike')
 
 
 class PostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
+    comments = CommentSerializer(read_only=True, many=True)
 
     # owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 

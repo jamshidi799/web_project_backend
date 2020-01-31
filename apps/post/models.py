@@ -8,6 +8,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     owner = models.ForeignKey('auth.User',
+                              default="3",
                               related_name='posts',
                               on_delete=models.CASCADE)
     channel = models.ForeignKey(Channel,
@@ -34,15 +35,21 @@ class Comment(models.Model):
                               on_delete=models.CASCADE)
     post = models.ForeignKey(Post,
                              related_name='comments',
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE,
+                             null=True,
+                             blank=True)
     reply_to = models.ForeignKey('Comment',
                                  on_delete=models.CASCADE,
                                  null=True,
                                  blank=True)
 
-    # like = models.ManyToManyField('auth.User',
-    #                               related_name="liek_comments",
-    #                               blank=True)
+    like = models.ManyToManyField('auth.User',
+                                  related_name="like_comments",
+                                  blank=True)
+    dislike = models.ManyToManyField('auth.User',
+                                     related_name="dislike_comments",
+                                     blank=True,
+                                     null=True)
 
     class Meta:
         ordering = ['date']
