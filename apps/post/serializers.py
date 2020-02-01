@@ -38,4 +38,4 @@ class PostSmallSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'owner', 'channel', 'title', 'image', 'like')
+        fields = ('id', 'owner', 'channel', 'title', 'image', 'like', 'date')

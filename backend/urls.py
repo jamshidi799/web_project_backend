@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/channels/', include('apps.channel.urls')),
     path('api/auth/', include('apps.user.urls')),
     path('', include('rest_framework.urls')),
+    path('api/feed/', include('apps.home.urls')),
 ]
