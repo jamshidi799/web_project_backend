@@ -67,12 +67,15 @@ class LikePost(GenericAPIView):
         except Post.DoesNotExist:
             raise Http404
 
-    def post(self, request, pk):
+    def post(self, request, pk, user_id):
         post = self.get_object(pk)
-        post.like.add(request.user)
-        post.save()
-        serializer = PostSerializer(post)
-        return Response(serializer.data)
+        post.like.add(user_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def delete(self, request, pk, user_id):
+        post = self.get_object(pk)
+        post.like.remove(user_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentList(GenericAPIView):

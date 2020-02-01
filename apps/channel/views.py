@@ -54,3 +54,23 @@ class ChannelDetail(GenericAPIView):
         channel = self.get_object(pk)
         channel.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChannelAuthorsView(GenericAPIView):
+    serializer_class = ChannelSerializer
+
+    def get_object(self, pk):
+        try:
+            return Channel.objects.get(pk=pk)
+        except Channel.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk, author_id):
+        channel = self.get_object(pk)
+        channel.authors.add(author_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def delete(self, request, pk, author_id):
+        channel = self.get_object(pk)
+        channel.authors.remove(author_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)

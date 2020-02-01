@@ -3,7 +3,7 @@ from apps.channel.models import Channel
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=20, blank=False)
+    title = models.CharField(max_length=50, blank=False)
     content = models.CharField(max_length=300, blank=False)
     image = models.ImageField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)

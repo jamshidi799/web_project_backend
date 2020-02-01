@@ -48,6 +48,12 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+
 # Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()

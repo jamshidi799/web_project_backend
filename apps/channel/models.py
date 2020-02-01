@@ -12,3 +12,6 @@ class Channel(models.Model):
     about = models.CharField(max_length=300)
     image = models.ImageField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name}'
