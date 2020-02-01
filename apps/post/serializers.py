@@ -24,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(read_only=True, many=True)
+
     # owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
@@ -37,4 +38,4 @@ class PostSmallSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'owner', 'channel', 'title', 'image')
+        fields = ('id', 'owner', 'channel', 'title', 'image', 'like')

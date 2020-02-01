@@ -4,14 +4,14 @@ from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import permissions
 
 
 class PostList(GenericAPIView):
     serializer_class = PostSerializer
-
-    # queryset = Post.objects.all()
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_queryset(self):
         print(self.request.user)
@@ -32,6 +32,9 @@ class PostList(GenericAPIView):
 
 class PostDetail(GenericAPIView):
     serializer_class = PostSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_object(self, pk):
         try:
@@ -60,6 +63,9 @@ class PostDetail(GenericAPIView):
 
 class LikePost(GenericAPIView):
     serializer_class = PostSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_object(self, pk):
         try:
@@ -81,6 +87,9 @@ class LikePost(GenericAPIView):
 class CommentList(GenericAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get(self, request, post_id):
         queryset = self.queryset.filter(post_id=post_id)
@@ -97,6 +106,9 @@ class CommentList(GenericAPIView):
 
 class CommentDetail(GenericAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_object(self, id):
         try:
@@ -125,6 +137,9 @@ class CommentDetail(GenericAPIView):
 
 class CommentLikeView(GenericAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_object(self, id):
         try:
@@ -140,6 +155,9 @@ class CommentLikeView(GenericAPIView):
 
 class CommentDislikeView(GenericAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     def get_object(self, id):
         try:
