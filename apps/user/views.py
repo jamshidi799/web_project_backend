@@ -8,6 +8,7 @@ from knox.models import AuthToken
 
 from apps.user.serializers import ProfileSerializer, UserSerializer, RegisterSerializer, LoginSerializer, ConnectionSerializer
 from .models import Profile, Connection
+from apps.notification.models import Notification
 
 
 # Register API
@@ -66,11 +67,10 @@ class ProfileDetail(GenericAPIView):
 
     def put(self, request, username):
         user = get_object_or_404(self.get_queryset(), username=username)
-        serializer = self.get_serializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_serializer = UserSerializer(user)
+        user_serializer.update(instance=request.user,
+                               validated_data=request.data)
+        return Response(user_serializer.data)
 
 
 class ProfileList(GenericAPIView):
@@ -96,6 +96,11 @@ class ConnectionList(GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            target = User.objects.get(id=request.data['following'])
+            notification = Notification(kind="follow",
+                                        creator=request.user.username,
+                                        target=target)
+            notification.save()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

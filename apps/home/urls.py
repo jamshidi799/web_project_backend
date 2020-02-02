@@ -6,4 +6,5 @@ urlpatterns = [
     path('latest', views.LatestList.as_view()),
     path('subscriptions', views.SubscriptionsList.as_view()),
     path('trending', views.TrendingList.as_view()),
+    path('search/<str:key>', views.SearchView.as_view()),
 ]

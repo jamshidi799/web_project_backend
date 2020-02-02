@@ -5,7 +5,7 @@ from apps.channel.models import Channel
 class Post(models.Model):
     title = models.CharField(max_length=50, blank=False)
     content = models.CharField(max_length=300, blank=False)
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to='post')
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     owner = models.ForeignKey('auth.User',
                               default="3",

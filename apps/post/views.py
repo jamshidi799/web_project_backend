@@ -1,5 +1,5 @@
 from apps.post.models import Post, Comment
-from apps.post.serializers import PostSerializer, CommentSerializer
+from apps.post.serializers import PostSerializer, PostSmallSerializer, CommentSerializer
 from django.http import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -19,7 +19,7 @@ class PostList(GenericAPIView):
 
     def get(self, request, format=None):
         posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
+        serializer = PostSmallSerializer(posts, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -99,6 +99,13 @@ class CommentList(GenericAPIView):
     def post(self, request, post_id, format=None):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
+            post = Post.objects.get(id=request.data['post'])
+            target = User.objects.get(id=post.owner)
+            notification = Notification(kind="comment",
+                                        creator=request.data['owner'],
+                                        post_target=post.title,
+                                        target=target)
+            notification.save()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

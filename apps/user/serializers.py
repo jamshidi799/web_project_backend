@@ -39,16 +39,19 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        instance.save()
+        instance.email = validated_data.get('email', instance.email)
         profile = instance.profile
         Profile.bio = validated_data.get('profile.bio', profile.bio)
+        instance.save()
         # user.email = user_validated_data.get('email', user.email)
         # instance.bio = validated_data.get('bio', instance.bio)
+        # instance.save()
+        print("aaa")
         profile.save()
         return instance
 
 
-class UserChannelSerializer(serializers.ModelSerializer):
+class UserSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username']
@@ -64,11 +67,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        post = Post.objects.create(validated_data['owner'],
-                                   validated_data['content'],
-                                   validated_data['title'])
-        # Profile.objects.create(user=user, bio=validated_data['profile']['bio'])
-        return post
+        profile_data = validated_data.pop('profile')
+        user = User.objects.create(**validated_data)
+        Profile.objects.create(user=user, **profile_data)
+        return user
 
 
 # Login Serializer
